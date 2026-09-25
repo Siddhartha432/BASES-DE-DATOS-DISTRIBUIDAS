@@ -1,0 +1,102 @@
+
+-- NODO 1: Clientes Rango Northwest
+CREATE TABLE dbo.Customer_Nodo1 (
+    CustomerID INT NOT NULL,
+    StoreID INT NULL,
+    TerritoryID INT NULL,
+    CONSTRAINT PK_Customer_Nodo1 PRIMARY KEY CLUSTERED (CustomerID),
+    CONSTRAINT CK_Customer_Nodo1_Rango CHECK (TerritoryID = 1)
+);
+
+-- NODO 2: Clientes Rango Northeast
+CREATE TABLE dbo.Customer_Nodo2 (
+    CustomerID INT NOT NULL,
+    StoreID INT NULL,
+    TerritoryID INT NULL,
+    CONSTRAINT PK_Customer_Nodo2 PRIMARY KEY CLUSTERED (CustomerID),
+    CONSTRAINT CK_Customer_Nodo2_Rango CHECK (TerritoryID = 2)
+);
+
+-- NODO 3: Clientes Rango Central
+CREATE TABLE dbo.Customer_Nodo3 (
+    CustomerID INT NOT NULL,
+    StoreID INT NULL,
+    TerritoryID INT NULL,
+    CONSTRAINT PK_Customer_Nodo3 PRIMARY KEY CLUSTERED (CustomerID),
+    CONSTRAINT CK_Customer_Nodo3_Rango CHECK (TerritoryID = 3)
+);
+
+-- NODO 4: Clientes Rango Southwest
+CREATE TABLE dbo.Customer_Nodo4 (
+    CustomerID INT NOT NULL,
+    StoreID INT NULL,
+    TerritoryID INT NULL,
+    CONSTRAINT PK_Customer_Nodo4 PRIMARY KEY CLUSTERED (CustomerID),
+    CONSTRAINT CK_Customer_Nodo4_Rango CHECK (TerritoryID = 4)
+);
+
+-- NODO 5: Clientes Rango Southwest
+CREATE TABLE dbo.Customer_Nodo5 (
+    CustomerID INT NOT NULL,
+    StoreID INT NULL,
+    TerritoryID INT NULL,
+    CONSTRAINT PK_Customer_Nodo5 PRIMARY KEY CLUSTERED (CustomerID),
+    CONSTRAINT CK_Customer_Nodo5_Rango CHECK (TerritoryID = 5)
+);
+
+
+
+-- Poblado del Nodo 1
+INSERT INTO dbo.Customer_Nodo1 (CustomerID, StoreID, TerritoryID)
+SELECT CustomerID, StoreID, TerritoryID
+FROM Sales.Customer
+WHERE TerritoryID = 1;
+
+-- Poblado del Nodo 2
+INSERT INTO dbo.Customer_Nodo2 (CustomerID, StoreID, TerritoryID)
+SELECT CustomerID, StoreID, TerritoryID
+FROM Sales.Customer
+WHERE TerritoryID = 2;
+
+-- Poblado del Nodo 3
+INSERT INTO dbo.Customer_Nodo3 (CustomerID, StoreID, TerritoryID)
+SELECT CustomerID, StoreID, TerritoryID
+FROM Sales.Customer
+WHERE TerritoryID = 3;
+
+-- Poblado del Nodo 4
+INSERT INTO dbo.Customer_Nodo4 (CustomerID, StoreID, TerritoryID)
+SELECT CustomerID, StoreID, TerritoryID
+FROM Sales.Customer
+WHERE TerritoryID = 4;
+
+-- Poblado del Nodo 5
+INSERT INTO dbo.Customer_Nodo5 (CustomerID, StoreID, TerritoryID)
+SELECT CustomerID, StoreID, TerritoryID
+FROM Sales.Customer
+WHERE TerritoryID = 5;
+GO
+
+CREATE VIEW dbo.Customer_Global AS
+SELECT CustomerID, StoreID, TerritoryID FROM dbo.Customer_Nodo1
+UNION ALL
+SELECT CustomerID, StoreID, TerritoryID FROM dbo.Customer_Nodo2
+UNION ALL
+SELECT CustomerID, StoreID, TerritoryID FROM dbo.Customer_Nodo3
+UNION ALL
+SELECT CustomerID, StoreID, TerritoryID FROM dbo.Customer_Nodo4
+UNION ALL
+SELECT CustomerID, StoreID, TerritoryID FROM dbo.Customer_Nodo5;
+GO
+
+-- Consulta sobre la vista en su propio bloque
+SELECT * FROM dbo.Customer_Global;
+GO
+
+
+
+
+
+
+SELECT soh.SalesOrderID, soh.SubTotal, soh.OnlineOrderFlag FROM Sales.SalesOrderHeader soh
+INNER JOIN dbo.Customer_Nodo4 N4 ON  N4.CustomerID = soh.CustomerID
